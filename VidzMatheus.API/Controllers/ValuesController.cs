@@ -14,14 +14,19 @@ namespace VidzMatheus.API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "Matheus", "Gabriel" };
+        var sArray = new string[] { "Matheus", "Gabriel", "Santos" };
+        return sArray;
         }
 
-        // GET api/values/5
+        // GET http://localhost:5000/api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "value";
+            var sArray = new string[] {"Matheus", "Gabriel"};
+           if (id > (sArray.Length - 1))
+            return "O valor digitado é maior do que o disponível";
+
+            return sArray[id];
         }
 
         // POST api/values
