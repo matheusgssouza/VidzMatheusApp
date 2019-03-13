@@ -9,5 +9,6 @@ namespace VidzMatheus.API.Data
         
             
         public DbSet<Value> values { get; set; }
+        
     }
 }

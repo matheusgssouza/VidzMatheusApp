@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using VidzMatheus.API.Data;
+using VidzMatheus.API.Models;
 
 namespace VidzMatheus.API.Controllers
 {
@@ -10,29 +13,35 @@ namespace VidzMatheus.API.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly DataContext _context;
+
+        public ValuesController(DataContext context)
+       {
+           _context = context;
+       } 
+
         // GET http://localhost:5000/api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<IActionResult> GetValues()
         {
-        var sArray = new string[] { "Matheus", "Gabriel", "Santos" };
-        return sArray;
+            var values = await _context.values.ToListAsync();
+            return Ok(values);
         }
 
         // GET http://localhost:5000/api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public async Task<IActionResult> GetValue(int id)
         {
-            var sArray = new string[] {"Matheus", "Gabriel"};
-           if (id > (sArray.Length - 1))
-            return "O valor digitado é maior do que o disponível";
-
-            return sArray[id];
+            var value = await _context.values.FirstOrDefaultAsync(v => v.Id == id);
+            return Ok(value);
         }
-
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> PostValue(Value value)
         {
+            _context.values.Add(value);
+            await _context.SaveChangesAsync();
+            return StatusCode(201); //Created
         }
 
         // PUT api/values/5
